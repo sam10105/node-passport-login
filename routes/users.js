@@ -1,34 +1,34 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
-const bcrypt = require("bcryptjs");
+const bcrypt = require('bcryptjs');
 
 // User Model
-const User = require("../models/User");
+const User = require('../models/User');
 
-router.get("/login", (req, res) => res.render("login"));
-router.get("/register", (req, res) => res.render("register"));
+router.get('/login', (req, res) => res.render('login'));
+router.get('/register', (req, res) => res.render('register'));
 
-router.post("/register", (req, res) => {
+router.post('/register', (req, res) => {
   const { name, email, password, password2 } = req.body;
   let errors = [];
 
   // Check required fields
   if (!name || !email || !password || !password2) {
-    errors.push({ msg: "Please fill in all fields" });
+    errors.push({ msg: 'Please fill in all fields' });
   }
 
   // Check passwords match
   if (password !== password2) {
-    errors.push({ msg: "Passwords do not match" });
+    errors.push({ msg: 'Passwords do not match' });
   }
 
   // Check password length
   if (password.length < 6) {
-    errors.push({ msg: "Password should be at least 6 characters" });
+    errors.push({ msg: 'Password should be at least 6 characters' });
   }
 
   if (errors.length > 0) {
-    res.render("register", {
+    res.render('register', {
       errors,
       name,
       email,
@@ -39,8 +39,8 @@ router.post("/register", (req, res) => {
     User.findOne({ email }).then(user => {
       if (user) {
         // User exists
-        errors.push({ msg: "User with that email already exists." });
-        res.render("register", {
+        errors.push({ msg: 'User with that email already exists.' });
+        res.render('register', {
           errors,
           name,
           email,
@@ -67,7 +67,8 @@ router.post("/register", (req, res) => {
             newUser
               .save()
               .then(user => {
-                res.redirect("/users/login");
+                req.flash('success_msg', 'Congratulations, you are registered');
+                res.redirect('/users/login');
               })
               .catch(err => console.log(err));
           });
