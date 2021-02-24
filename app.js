@@ -28,7 +28,6 @@ function createApp() {
       saveUninitialized: false,
       cookie: {
         sameSite: true,
-        secure: NODE_ENV === 'production',
         maxAge: ONE_HOUR,
       },
     })
