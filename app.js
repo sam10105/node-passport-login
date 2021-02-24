@@ -4,6 +4,9 @@ const flash = require('connect-flash');
 const session = require('express-session');
 const passport = require('passport');
 
+const { NODE_ENV } = process.env;
+const ONE_HOUR = 1000 * 60 * 60;
+
 function createApp() {
   const app = express();
 
@@ -21,8 +24,13 @@ function createApp() {
   app.use(
     session({
       secret: 'secret',
-      resave: true,
-      saveUninitialized: true,
+      resave: false,
+      saveUninitialized: false,
+      cookie: {
+        sameSite: true,
+        secure: NODE_ENV === 'production',
+        maxAge: ONE_HOUR,
+      },
     })
   );
 
